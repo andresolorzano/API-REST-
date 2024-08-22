@@ -50,21 +50,63 @@ class ClienteController extends Controller
     public function show(Cliente $cliente)
     {
         try{
-
+            return response()->json([
+                'success' => true,
+                'message' => 'Cliente encontrado',
+                'data' => $cliente
+            ], 200);
         }catch(Exception $e){
-
+            return response()->json([
+                'success' => false,
+                'message' => 'Cliente no encontrado',
+                'error' => $e->getMessage()
+            ], 404);
         }
     }
 
 
-    public function update(Request $request, Cliente $cliente)
+    public function update(ClienteRequest $request, Cliente $cliente)
     {
-        //
+        try{
+            $cliente->update($request->all());
+            return response()->json([
+                'success' => true,
+                'message' => 'Cliente actualizado correctamente',
+                'data' => $cliente
+
+            ], 200);
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Cliente no encontrado',
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 
 
     public function destroy(Cliente $cliente)
     {
-        //
+        try{
+
+            if(!$cliente){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cliente no encontrado'
+                ], 404);
+            }
+
+            $cliente->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Cliente elimando correctamente'
+            ], 200);
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'No se pudo eliminar Cliente',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
